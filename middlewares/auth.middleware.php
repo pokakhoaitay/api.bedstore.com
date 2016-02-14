@@ -15,7 +15,7 @@ $app->add(function ($request, $response, $next) {
     $date = $request->getHeaderLine('X-Date');
     $path = $request->getUri()->getPath();
     $port = $request->getUri()->getPort();
-    $uri = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . (empty($port) ? '' : ':' . $port) . $request->getUri()->getBasePath() . $path;
+    $uri = Utils::getAddress();
     $signature = $method . '\n'
         . md5($content) . '\n'
         . $contentType . '\n'

@@ -12,7 +12,7 @@ require_once 'lib/core/app.utils.php';
 
 
 date_default_timezone_set('Asia/Ho_Chi_Minh');
-
+error_reporting(E_ALL & ~E_NOTICE);
 /**-------------------
  * HANDLE ERROR
  *-------------------*/

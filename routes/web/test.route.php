@@ -9,6 +9,7 @@
 $app->get('/web/test', function ($req, $res, $args) {
     //$auth=$req->getHeaderLine('auth');
     $res=$res->withJson(['data' => 'I am from API']);
+    throw new ErrorException('Virus');
     return $res;
 });
 

@@ -5,7 +5,6 @@
  * Date: 2/9/2016
  * Time: 4:06 PM
  */
-use \lib\config\ApiConfig;
 
 $app->add(function ($request, $response, $next) {
     $method = $request->getMethod();
@@ -13,8 +12,6 @@ $app->add(function ($request, $response, $next) {
     $content = http_build_query($contentRaw);
     $contentType = $request->getHeaderLine('Content-Type');
     $date = $request->getHeaderLine('X-Date');
-    $path = $request->getUri()->getPath();
-    $port = $request->getUri()->getPort();
     $uri = Utils::getAddress();
     $signature = $method . '\n'
         . md5($content) . '\n'
@@ -22,31 +19,25 @@ $app->add(function ($request, $response, $next) {
         . $date . '\n'
         . $uri;
 
+    $authString = $request->getHeaderLine('X-Auth');
+    $response = $response->withStatus(401);
+    $authHeaderArr = explode(' ', $authString);
 
-    $authString = $request->getHeaderLine('auth');
-    if (empty($authString))
-        $response = $response->withStatus(401);
-    else {
-        $authHeaderArr = explode(', ', $authString);
-        if (is_null(ApiConfig::TOKEN_SOURCE[$authHeaderArr[0]])) {
-            $response = $response->withStatus(401);
-        } else {
-            $secretKey = ApiConfig::TOKEN_SOURCE[$authHeaderArr[0]];
-            $sigCalc = Utils::calculateHMAC($signature, $secretKey);
-            $sigHeader = $authHeaderArr[1];
-            if ($sigCalc == $sigHeader) {
-                $response = $next($request, $response);
-            } else {
-                $response = $response->withStatus(401);
-            }
+    if (
+        !empty($authString)
+        && !is_null($authHeaderArr[0])
+        && $authHeaderArr[0] == 'BED_WEB' || $authHeaderArr[0] == 'BED_ADM'
+        && !is_null($authHeaderArr[1])
+        && !is_null(explode(':', $authHeaderArr[1]))
+    ) {
+        $accessKey = explode(':', $authHeaderArr[1])[0];
+        $sigHeader = explode(':', $authHeaderArr[1])[1];
+        $secretKey = ApiConfig::TOKEN_SOURCE[$accessKey];
+        $sigCalc = Utils::calculateHMAC($signature, $secretKey);
+
+        if ($sigCalc == $sigHeader) {
+            $response = $next($request, $response);
         }
-
     }
-
-    //$secretKey = \lib\config\ApiConfig::TOKEN_SOURCE[]
-
-    // $response = $next($request, $response);
-
-
     return $response;
 });

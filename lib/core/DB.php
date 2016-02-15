@@ -10,7 +10,7 @@ namespace lib\core;
 use lib\config\DbConfig;
 use mysqli;
 
-require_once __DIR__.'/../config/database.config.php';
+require_once __DIR__.'/../config/DBConfig.php';
 
 /**
  * Referrence to this: https://www.binpress.com/tutorial/using-php-with-mysql-the-right-way/17

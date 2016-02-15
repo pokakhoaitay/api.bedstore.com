@@ -2,50 +2,33 @@
 
 
 require 'vendor/autoload.php';
-require 'lib/config/app.config.php';
-require_once 'lib/config/api.config.php';
+require_once 'lib/config/AppConfig.php';
+require_once 'lib/config/ApiConfig.php';
 
-require_once 'lib/core/db.core.php';
-require_once 'lib/core/app.core.php';
-require_once 'services/guard.service.php';
-require_once 'lib/core/app.utils.php';
+require_once 'lib/core/DB.php';
+require_once 'lib/core/AppCore.php';
+require_once 'lib/core/Utils.php';
+require_once 'lib/core/bootstrap.core.php';
+require_once 'lib/core/errorhandler.core.php';
 
 
-date_default_timezone_set('Asia/Ho_Chi_Minh');
-error_reporting(E_ALL & ~E_NOTICE);
 /**-------------------
  * HANDLE ERROR
  *-------------------*/
-$c = new Slim\Container(\lib\config\AppConfig::SLIM_CONFIGS);
-//$c['errorHandler'] = function ($c) {
-//    return function ($request, $response, $exception) use ($c) {
-//        return $c['response']->withStatus(500)
-//            ->withHeader('Content-Type', 'text/html')
-//            ->write('Something went wrong!');
-//    };
-//};
+$c = new Slim\Container(AppConfig::SLIM_CONFIGS);
 
-
-//register_shutdown_function('fatal_handler');
-//
-//function fatal_handler()
-//{
-//    $lastError = error_get_last();
-//    if (!is_null($lastError)) {
-//        header("HTTP/1.1 500 Internal Server Error");
-//    }
-//}
+$c['errorHandler'] = function ($c) {
+    return function ($request, $response, $exception) use ($c) {
+        error_log($exception);
+        return $c['response']->withStatus(500)
+            ->withHeader('Content-Type', 'text/html')
+            ->write(!AppConfig::IS_DEBUG ? AppConfig::SERVER_ERR_MSG : $exception);
+    };
+};
 
 $app = new Slim\App($c);
 
-//$c['xcore\AppCore'] = function ($container) {
-//    return new AppCore($container);
-//};
-
-//$app->add(new AppGuardMiddleware());
-require_once __DIR__.'/middlewares/auth.middleware.php';
-
-//$container = $app->getContainer();
+require_once __DIR__ . '/middlewares/auth.middleware.php';
 
 
 // Automatically load router files

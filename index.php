@@ -4,6 +4,7 @@
 require 'vendor/autoload.php';
 require_once 'lib/config/AppConfig.php';
 require_once 'lib/config/ApiConfig.php';
+require_once 'services/ServiceBase.php';
 
 require_once 'lib/core/DB.php';
 require_once 'lib/core/AppCore.php';

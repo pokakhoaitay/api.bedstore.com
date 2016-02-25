@@ -26,8 +26,6 @@ class ContactService{
         $result=$this->db->query(sprintf('INSERT INTO  contact (name, email, messages) VALUES ("%s","%s","%s")', $name, $email, $messages));
         if(!$result)
         {
-            $error= $this->db->error();
-            //TODO: Log errors
             $this->db->rollback();
         }
         $this->db->commit();

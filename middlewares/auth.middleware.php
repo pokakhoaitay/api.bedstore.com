@@ -28,7 +28,7 @@ $app->add(function ($request, $response, $next) {
         && !is_null($authHeaderArr[0])
         && $authHeaderArr[0] == 'BED_WEB' || $authHeaderArr[0] == 'BED_ADM'
         && !is_null($authHeaderArr[1])
-        && !is_null(explode(':', $authHeaderArr[1]))
+        && !is_null(explode(':', $authHeaderArr[1]))//&&false
     ) {
         $accessKey = explode(':', $authHeaderArr[1])[0];
         $sigHeader = explode(':', $authHeaderArr[1])[1];

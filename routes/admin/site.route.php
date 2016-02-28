@@ -7,11 +7,13 @@
  */
 
 require_once __DIR__ . '/../../services/SiteService.php';
-use lib\config\ApiConfig;
 
 $app->get('/admin/site/get-site-data/{catName}', function ($request, $response, $args) {
     $contact = new SiteService();
     $catName=$args['catName'];
     $result= $contact->getSiteInfo($catName);
-    return AppCore::JsonResponse($response, $result, $result ? true : false);
+    $error = null;
+    if(!$result)
+        $error='Unable fetch data';//TODO: Detail error for client
+    return AppCore::JsonResponse($response, $result,200, $error );
 });

@@ -10,7 +10,6 @@ require_once 'lib/core/DB.php';
 require_once 'lib/core/AppCore.php';
 require_once 'lib/core/Utils.php';
 require_once 'lib/core/bootstrap.core.php';
-require_once 'lib/core/errorhandler.core.php';
 
 
 /**-------------------
@@ -18,14 +17,7 @@ require_once 'lib/core/errorhandler.core.php';
  *-------------------*/
 $c = new Slim\Container(AppConfig::SLIM_CONFIGS);
 
-$c['errorHandler'] = function ($c) {
-    return function ($request, $response, $exception) use ($c) {
-        error_log($exception);
-        return $c['response']->withStatus(500)
-            ->withHeader('Content-Type', 'text/html')
-            ->write(!AppConfig::IS_DEBUG ? AppConfig::SERVER_ERR_MSG : $exception);
-    };
-};
+require_once 'lib/core/errorhandler.core.php';
 
 $app = new Slim\App($c);
 

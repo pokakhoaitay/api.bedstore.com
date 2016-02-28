@@ -6,8 +6,6 @@
  * Time: 5:29 AM
  */
 
-require_once __DIR__ . '/../config/AppConfig.php';
-use lib\config\AppConfig;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -51,22 +49,23 @@ final class AppCore
         return false;
     }
 
-    public static function JsonResponse($res, $data, $status)
+    public static function JsonResponse($res, $data, $status, $error)
     {
         return $res = $res->withJson([
             'data' => $data,
-            'status' => $status
+            'status' => $status,
+            'error'=>$error
         ]);
     }
 
-    public static function JsonResponseSuccess($res, $data)
-    {
-        return self::JsonResponse($res, $data, true);
-    }
-
-    public static function JsonResponseFail($res, $data)
-    {
-        return self::JsonResponse($res, $data, false);
-    }
+//    public static function JsonResponseSuccess($res, $data)
+//    {
+//        return self::JsonResponse($res, $data, true);
+//    }
+//
+//    public static function JsonResponseFail($res, $data)
+//    {
+//        return self::JsonResponse($res, $data, false);
+//    }
 
 }

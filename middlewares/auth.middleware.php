@@ -20,7 +20,6 @@ $app->add(function ($request, $response, $next) {
         . $uri;
 
     $authString = $request->getHeaderLine('X-Auth');
-    $response = $response->withStatus(401);
     $authHeaderArr = explode(' ', $authString);
 
     if (
@@ -38,6 +37,8 @@ $app->add(function ($request, $response, $next) {
         if ($sigCalc == $sigHeader) {
             $response = $next($request, $response);
         }
+    }else{
+        $response = $response->withStatus(401);
     }
     return $response;
 });
